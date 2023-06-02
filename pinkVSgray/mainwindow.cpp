@@ -51,7 +51,7 @@ void MainWindow::updateGame()
         p1forceX = fuerzaHorizontal;
     } else{
         // Si no se están presionando las teclas de movimiento en x, se frena al jugador
-         std::pair<float, float> velPlayer = player1.getVel();
+         std::pair<float, float> velPlayer = player1->getVel();
         if(velPlayer.first != 0){ // Si la velocidad en x no es igual a 0...
             if(velPlayer.first > 0){
                 p1forceX = -1 * friccionHorizontal;
@@ -61,7 +61,7 @@ void MainWindow::updateGame()
         }
     }
 
-    player1.actForce(std::make_pair(p1forceX, 0));
+    player1->actForce(std::make_pair(p1forceX, 0));
     //TODO: considerar colisiones horizontales con las paredes
 }
 
