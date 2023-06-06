@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 #include <QTimer> // Para actualizar el estado del juego cada cierto tiempo
 #include <QKeyEvent> // Para manejar los eventos relacionados con presionar y soltar teclas
+#include <QPointF>
+#include <vector>
 
 #include "player.h"
 
@@ -23,6 +25,10 @@ public:
 
 public slots:
     void updateGame();
+    void collisionDetected(player* & player, QGraphicsRectItem* & rectItem);
+
+signals:
+    void collision(player* & player, QGraphicsRectItem* & rectItem);
 
 private:
     Ui::MainWindow *ui;
@@ -37,10 +43,17 @@ private:
     // Eventos(metodos) de presionar y soltar teclas
     void keyPressEvent(QKeyEvent *ev);
     void keyReleaseEvent(QKeyEvent *ev);
-    bool p1MovIz; // Player 1 moviéndose a la izquierda, la derecha, saltando o agachándose
-    bool p1MovDer;
-    bool p1jump;
-    bool p1crouch;
+    bool p1MovIz = false; // Player 1 moviéndose a la izquierda, la derecha, saltando o agachándose
+    bool p1MovDer = false;
+    bool p1jump = false;
+    bool p1crouch = false;
+
+    // Para chequear colisiones
+
+
+    // En este vector se guardan los elementos que conforman el mapa
+    std::vector<QGraphicsRectItem*> rectangulosMapa;
+    QGraphicsRectItem* rectangle;
 
 
 };

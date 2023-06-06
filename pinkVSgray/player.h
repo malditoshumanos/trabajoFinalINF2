@@ -5,6 +5,7 @@
 #include <QPainter>
 
 #include <utility>
+#include <cmath>
 
 
 /*
@@ -27,13 +28,22 @@ public:
     void actForce(std::pair<float, float>); // Input: fuerza aplicada al jugador. Modela el movimiento.
     void setOnfall(bool);
     bool getOnfall();
+
+    std::pair<float, float> getPos();
     std::pair<float, float> getVel();
+
+    void setVelX(float);
+    void setVelY(float);
+    void setPosX(float);
+    void setPosY(float);
 
 
 private:
+    // AQUÍ SE MODIFICAN LOS PARÁMETROS QUE AFECTAN EL COMPORTAMIENTO DEL JUGADOR
     bool onFall; // Ver comentario arriba
-    float masa; // masa del jugador
-    float dt; // cambio de tiempo en cada actualización
+    const float masa = 5; // masa del jugador
+    const float dt = 0.5; // cambio de tiempo en cada actualización
+    QRectF hitbox = QRectF(-10,-25,20,50); // Para usar en boundingRect() y paint() (ver player.cpp)
 
     std::pair<float, float> pos; // posición, velocidad, aceleración
     std::pair<float, float> vel;
