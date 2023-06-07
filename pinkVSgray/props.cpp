@@ -6,6 +6,7 @@ props::props(int w_, int h_, int x, int y) //  implementación del constructor d
     h = h_;
     posx = x;
     posy = y;
+    image.load(":/images/Box2.png"); // Carga la imagen desde un archivo
 }
 
 QRectF props::boundingRect() const //  implementación de boudingRect() para delimitar con un rectangulo
@@ -17,11 +18,13 @@ void props::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 {
     //painter->setBrush(Qt::darkBlue);
     //painter->drawRect(boundingRect());
-    QPen pen(Qt::blue); // Crear un QPen con color azul
-    pen.setWidth(4); // Establecer el ancho de línea a 3
-    painter->setPen(pen); // Configurar el QPen en el QPainter
-    painter->setBrush(Qt::white); // Deshabilitar el relleno
-    qreal radius = 5.0; // Radio de curvatura de las esquinas
-    painter->drawRoundedRect(boundingRect(), radius, radius); // Dibujar rectángulo con esquinas redondeadas
+
+    //QPen pen(Qt::blue); // Crear un QPen con color azul
+    //pen.setWidth(4); // Establecer el ancho de línea a 3
+    //painter->setPen(pen); // Configurar el QPen en el QPainter
+    //painter->setBrush(Qt::black); // Deshabilitar el relleno
+    //qreal radius = 10.0; // Radio de curvatura de las esquinas
+    //painter->drawRoundedRect(boundingRect(), radius, radius); // Dibujar rectángulo con esquinas redondeadas
+    painter->drawPixmap(boundingRect().toRect(), image);
 
 }

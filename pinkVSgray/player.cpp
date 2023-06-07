@@ -13,6 +13,22 @@ player::player(float xInicial, float yInicial)
     this->vida = 500; // El jugador inicia con vida máxima
     this->cooldownDisparo = false; // El cooldown está desactivado al spawnear al jugador
     this->pickUpActivado = 'N'; // Spawnea sin pickUp
+
+
+    // SPRITES
+    // crear un objeto QTimer
+    timerPlayer = new QTimer();
+    rows = 0;
+    columns = 0;
+    pixmapPlayer = new QPixmap(":/images/Pink.png");
+
+    //dimensiones imagen
+    width = 32;
+    high = 32;
+    // activa el temporizador timer2 con un intervalo de 100 milisegundos.
+    timerPlayer->start(100);
+    // se conecta la señal timeout del temporizador a la ranura Actualizacion2 de la clase moneda.
+    connect(timerPlayer, &QTimer::timeout, this,&player::updateSprPlayer);
 }
 
 QRectF player::boundingRect() const
@@ -23,13 +39,26 @@ QRectF player::boundingRect() const
 void player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     // Para crear un círculo azul
-    painter->setBrush(Qt::darkBlue);
-    painter->drawRect(hitbox);
+    //painter->setBrush(Qt::darkBlue);
+    painter->drawPixmap(-width/2, -high/2,*pixmapPlayer,columns,rows,width,high);
+    setScale(0.9);
+    //painter->drawRect(hitbox);
 }
 
+void player::updateSprPlayer() //  se invoca cada vez que se produce una señal de tiempo (timeout) del temporizador
+{
+    columns += 32;
+    if(columns >= 192){
+        columns = 0;
+    }
 
+    rows += 32;
+    if(rows >= 32){
+        rows =0;
+    }
+    this->update(-width/2,-high/2,width,high);  // actualización del área de dibujo de la moneda.
 
-
+}
 
 
 void player::actPos()

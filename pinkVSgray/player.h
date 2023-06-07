@@ -7,6 +7,10 @@
 #include <utility>
 #include <cmath>
 
+// PARA SPRITES
+#include <QObject>
+#include <QTimer>
+#include <QPixmap>
 
 /*
  * Para tener en cuenta las colisiones con el piso del jugador, se tiene el bool onFall que debe
@@ -15,7 +19,7 @@
  * Cuando este bool está en false, no hay aceleración vertical hacia abajo.
  */
 
-class player : public QGraphicsItem
+class player : public QObject, public QGraphicsItem
 {
 public:
     player(float, float); // El constructor recibe la posición inicial del jugador
@@ -48,6 +52,11 @@ public:
     char getPickUp();
     void setPickUp(char);
 
+
+    // PARA SPRITES
+    QTimer *timerPlayer;  // puntero controlar la actualización de la moneda
+    QPixmap *pixmapPlayer; // puntero para pintar la imagen de la moneda
+    float rows, columns, width, high; // disposición de las imágenes en una hoja de sprites
 
 private:
     // ESTOS SON LOS PARÁMETROS QUE AFECTAN EL MOVIMIENTO DEL JUGADOR
@@ -82,6 +91,10 @@ protected:
      * En el constructor se establese que el arma inicial es la Desert Eagle.
      */
     char arma;
+
+public slots:
+    // Actualizar el sprite del jugador
+    void updateSprPlayer(); // se invoca cuando se produce una actualización de la moneda.
 };
 
 #endif // PLAYER_H

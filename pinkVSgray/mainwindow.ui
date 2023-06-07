@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1067</width>
-    <height>765</height>
+    <width>1474</width>
+    <height>1067</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>-10</x>
       <y>10</y>
-      <width>1031</width>
-      <height>681</height>
+      <width>1481</width>
+      <height>1011</height>
      </rect>
     </property>
    </widget>
@@ -30,8 +30,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1067</width>
-     <height>21</height>
+     <width>1474</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>

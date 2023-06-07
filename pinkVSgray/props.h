@@ -9,6 +9,7 @@ class props: public QGraphicsItem
     // Private:
     int w,h;         // Almacenar el ancho (w) y la altura (h) de prop
     int posx, posy;  // Almacenar las coordenadas x e y de la posición del prop
+    QPixmap image; // Variable para almacenar la imagen de fondo
 
 public:
     props(int w_, int h_, int x, int y); // Constructor recibe ancho w_, altura h_ y las coordenadas x e y de posición del prop

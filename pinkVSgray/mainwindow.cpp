@@ -55,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent)
     // LAS COORDENADAS VISIBLES SON ENTRE (-500, 500) Y (500, 500)
     scene = new QGraphicsScene(-500, -500, 1000, 1000);
     ui->graphicsView->setScene(scene);
+    scene->setBackgroundBrush(QBrush(QImage(":/images/back.png")));
+    //scene->setBackgroundBrush(QBrush(Qt::white));
 
     //CREAR JUGADORES
     //TODO: CUANDO LA POS EN X INICIAL NO ES 0, LAS LINEAS VERT SALEN CORRIDAS
@@ -68,28 +70,55 @@ MainWindow::MainWindow(QWidget *parent)
         scene->addItem(currentPlayer);
     }
 
-    //CREAR MAPA    
+    //CREAR MAPA
     props* propToAdd;
 
-    propToAdd = new props(20, 900, 0, 0); // pared izquierda
-    propToAdd->setPos(-450, -450);
+    propToAdd = new props(20, 1700, 0, 0); // pared izquierda
+    propToAdd->setPos(-800, -600);
     propsMapa.push_back(propToAdd);
 
-    propToAdd = new props(20, 900, 0, 0); // pared derecha
-    propToAdd->setPos(450, -450);
+    propToAdd = new props(20, 1700, 0, 0); // pared derecha
+    propToAdd->setPos(780, -600);
     propsMapa.push_back(propToAdd);
 
-    propToAdd = new props(900, 20, 0, 0); // piso
-    propToAdd->setPos(-450, 0);
+    propToAdd = new props(650, 40, 0, 0); // piso izq
+    propToAdd->setPos(-780, 415);
     propsMapa.push_back(propToAdd);
 
-    propToAdd = new props(900, 20, 0, 0); // techo
-    propToAdd->setPos(-450, -400);
+    propToAdd = new props(100, 40, 0, 0); // piso centro
+    propToAdd->setPos(-50, 415);
     propsMapa.push_back(propToAdd);
 
-    propToAdd = new props(200, 20, 0, 0); // plataforma
-    propToAdd->setPos(-150, -150);
+    propToAdd = new props(650, 40, 0, 0); // piso der
+    propToAdd->setPos(150, 415);
     propsMapa.push_back(propToAdd);
+
+
+    propToAdd = new props(300, 40, 0, 0); // plataforma mitad - izq
+    propToAdd->setPos(-450, 100);
+    propsMapa.push_back(propToAdd);
+
+    propToAdd = new props(300, 40, 0, 0); // plataforma mitad - der
+    propToAdd->setPos(150, 100);
+    propsMapa.push_back(propToAdd);
+
+    propToAdd = new props(300, 40, 0, 0); // plataforma mitad - izq
+    propToAdd->setPos(-780, -200);
+    propsMapa.push_back(propToAdd);
+
+    propToAdd = new props(300, 40, 0, 0); // plataforma mitad - der
+    propToAdd->setPos(480, -200);
+    propsMapa.push_back(propToAdd);
+
+
+    propToAdd = new props(1200, 40, 0, 0); // plataforma techo
+    propToAdd->setPos(-600, -400);
+    propsMapa.push_back(propToAdd);
+
+    propToAdd = new props(2000, 20, 0, 0); // techo
+    propToAdd->setPos(-780, -564);
+    propsMapa.push_back(propToAdd);
+
 
     for (props* propAct : propsMapa) {
         scene->addItem(propAct);
@@ -98,14 +127,55 @@ MainWindow::MainWindow(QWidget *parent)
     //Props Destructibles
     propsLife* propDestructAdd;
 
-    propDestructAdd = new propsLife(40, 40, 0, 0, 200);
-    propDestructAdd->setPos(100, -50);
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(200, 355);
     propsMapaDestructibles.push_back(propDestructAdd);
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(450, 355);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(-400, 355);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(-600, 355);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(-400, 45);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(250, 45);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(-400, -460);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(90, -460);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(-30, -460);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
+    propDestructAdd = new propsLife(60, 60, 0, 0, 200);
+    propDestructAdd->setPos(350, -460);
+    propsMapaDestructibles.push_back(propDestructAdd);
+
 
     for (propsLife* propAct : propsMapaDestructibles) {
         scene->addItem(propAct);
     }
-
 
     // Añadir pickUps
     /*
@@ -209,7 +279,7 @@ void MainWindow::updateGame()
         // Determinar si el jugador está parado sobre una plataforma
         if(!playerAct->getOnfall()){
             bool playerEnElAire = true;
-            verticalLines[i]->setPos(playerAct->getPos().first, (playerAct->getPos().second + 25 + 3));
+            verticalLines[i]->setPos(playerAct->getPos().first, (playerAct->getPos().second + 50 + 3));
             for(int iRect = 0; iRect < propsMapa.size(); iRect++){
                 if( verticalLines[i]->collidesWithItem(propsMapa[iRect]) ){
                     playerEnElAire = false;
@@ -223,6 +293,7 @@ void MainWindow::updateGame()
                 }
             }
             playerAct->setOnfall(playerEnElAire);
+
         }
 
 
@@ -365,8 +436,8 @@ void MainWindow::collisionDetected(player*  player, props*  rectItem)
     char collisionType = 'N'; // Valores posibles: N: no específicado, Y: en Y, X: en X
 
     // Dimensiones del jugador
-    float playerHeight = 50;
-    float playerWidth = 20;
+    float playerHeight = 100;
+    float playerWidth = 40;
 
     std::cout << "Collision detected!" << std::endl;
     std::cout << rectItem->pos().x() << ", " << rectItem->pos().y() << " ...rectanglepos" << std::endl;
