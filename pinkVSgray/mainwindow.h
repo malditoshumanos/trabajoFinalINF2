@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <memory>
+#include <random>
 
 
 #include "player.h"
@@ -48,9 +49,19 @@ public slots:
     void propDisparoRecibido(propsLife *propAct, int damage);
 
     // Método para modelar recoger pickups
-    void recogioPickUp(player* playerAct, char pickUpId);
+    void recogioPickUp(player* playerAct, char pickUpId, int player1or2);
+
+    // Método para modelar la duración de los pickups
+    void pickUpEndedP1();
+    void pickUpEndedP2();
+
+    void spawnPickUp();
 
 signals:
+
+    // Método para modelar recoger pickups
+    void colisionPickUp(player* playerAct, char pickUpId, int player1or2);
+
     // Colisión entre jugador y elementos del mapa
     void collision(player*  player, props*  rectItem);
 
@@ -60,8 +71,7 @@ signals:
     // Método para modelar el daño hecho a los props destructibles
     void colisionDisparoProp(propsLife* propAct, int damage);
 
-    // Método para modelar recoger pickups
-    void colisionPickUp(player* playerAct, char pickUpId);
+
 
 private:
     Ui::MainWindow *ui;
@@ -72,8 +82,16 @@ private:
     std::vector<player*> jugadores;
 
     QTimer *timer; // Timer para actualizar el juego
+    //Timers para manejar el cooldown
     QTimer *addCooldownTimer;
     std::vector<QTimer*> cooldownTimers;
+
+    // Timers para manejar el tiempo del pickup
+    QTimer *addPickUpTimer;
+    std::vector<QTimer*> pickUpTimers;
+
+    // Timers para spawnear los pickups
+    QTimer *spawnPickUpTimer;
 
 
     // Eventos(metodos) de presionar y soltar teclas
@@ -101,6 +119,9 @@ private:
 
     // En este vector se guardan los pickUps en el mapa
     std::vector<pickUps*> mapPickUps;
+
+    // elegir pickup aleatoriamente
+    char getRandomChar();
 
 
 };

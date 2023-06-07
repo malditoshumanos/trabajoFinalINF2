@@ -5,6 +5,9 @@ pickUps::pickUps(int w_, int h_, int x, int y,  char idPickUp) : props(w_, h_, x
     /* Este ID determina el efecto que tendrá el pickup.
      * V: restaurar vida por completo (la vida completa es de 500)
      * A: aumento de velocidad
+     * J: jetpack
+     * M: metralleta
+     * I: invencible
      */
     IDpickUp = idPickUp;
 }

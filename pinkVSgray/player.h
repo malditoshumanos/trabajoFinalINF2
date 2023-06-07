@@ -45,6 +45,9 @@ public:
     void setCooldownDisparo(bool);
     bool getCooldownDisparo();
 
+    char getPickUp();
+    void setPickUp(char);
+
 
 private:
     // ESTOS SON LOS PARÁMETROS QUE AFECTAN EL MOVIMIENTO DEL JUGADOR
@@ -58,6 +61,8 @@ private:
     int vida; // La vida del jugador está entre 0 y 500
 
     bool cooldownDisparo;
+
+    char pickUpActivado; // N: no pickUp, V: vida: A: aumentar velocidad
 
 protected:
     /* Protected significa que las clases derivadas de player (proyectil) van a poder

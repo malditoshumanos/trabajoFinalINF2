@@ -34,7 +34,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(colisionDisparoProp(propsLife*,int)), this, SLOT(propDisparoRecibido(propsLife*,int)));
 
     // Señal y slot de recoger pickUps
-    connect(this, SIGNAL(colisionPickUp(player*,char)), this, SLOT(recogioPickUp(player*,char)));
+    connect(this, SIGNAL(colisionPickUp(player*,char, int)), this, SLOT(recogioPickUp(player*,char, int)));
+
+    // Señal y slot del timer de los pickups
+    addPickUpTimer = new QTimer();
+    pickUpTimers.push_back(addPickUpTimer);
+    addPickUpTimer = new QTimer();
+    pickUpTimers.push_back(addPickUpTimer);
+    connect(pickUpTimers[0], SIGNAL(timeout()), this, SLOT(pickUpEndedP1()));
+    connect(pickUpTimers[1], SIGNAL(timeout()), this, SLOT(pickUpEndedP2()));
+
+    // señal y slot de spawnear pickups
+    spawnPickUpTimer = new QTimer();
+    connect(spawnPickUpTimer, SIGNAL(timeout()), this, SLOT(spawnPickUp()));
+    spawnPickUpTimer->start(5000);
 
 
 
@@ -95,15 +108,16 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // Añadir pickUps
+    /*
     pickUps* pickUpAdd;
 
-    pickUpAdd = new pickUps(30, 30, 0, 0, 'A');
+    pickUpAdd = new pickUps(30, 30, 0, 0, 'I');
     pickUpAdd->setPos(-100, -30);
     mapPickUps.push_back(pickUpAdd);
 
     for (pickUps*  pickUpAct: mapPickUps) {
         scene->addItem(pickUpAct);
-    }
+    }*/
 
 
     // Crear lineas verticales para chequear si el jugador está en el aire
@@ -137,16 +151,21 @@ void MainWindow::updateGame()
 
     for(int i = 0; i < 2; i++){
         player* playerAct = jugadores[i];
+        char pickUpPlayer = playerAct->getPickUp();
 
         // Fuerza total sobre el jugador 1
         float p1forceX = 0;
         float p1forceY = 0;
+
+        //Implementación de la invencibilidad
+        if(pickUpPlayer == 'I') playerAct->setHealth(500);
 
 
         /*
          * PARÁMETROS QUE DESCRIBEN EL MOVIMIENTO DEL JUGADOR
          */
         float fuerzaHorizontal = 4; // Magnitud de fuerza que exprimenta el jugador al moverse en x
+        if(pickUpPlayer == 'A') fuerzaHorizontal = 12; // Si hay aumento de velocidad
         float friccionHorizontal = 7.5; // Magnitud de la fricción del piso
         float viSalto = -40; // Velocidad inicial vertical hacia arriba de cada salto
         float gravity = 10; // Fuerza de la gravedad
@@ -207,11 +226,13 @@ void MainWindow::updateGame()
             playerAct->setOnfall(true);
         }
 
+
         if(playerAct->getOnfall()){
             p1forceY = gravity;
         }else if (!playerAct->getOnfall()){
             p1forceY = 0;
         }
+
 
 
 
@@ -261,7 +282,7 @@ void MainWindow::updateGame()
         for (pickUps* pickUpAct : mapPickUps) {
             if(playerAct->collidesWithItem(pickUpAct)){
                 char pickUpId = pickUpAct->getId();
-                emit colisionPickUp(playerAct, pickUpId);
+                emit colisionPickUp(playerAct, pickUpId, i);
                 scene->removeItem(pickUpAct);
                 pickUpRecogido = contPickUp;
             }
@@ -274,6 +295,13 @@ void MainWindow::updateGame()
         /*
          * ACTUALIZAR MOVIMIENTO DE LOS JUGADORES
          */
+
+        // Implementación del jetpack
+        if(pickUpPlayer == 'J' && pJump[i]){
+            playerAct->setVelY(-9);
+            playerAct->setOnfall(true);
+        }
+
         playerAct->actForce(std::make_pair(p1forceX, p1forceY));
         playerAct->setPos(playerAct->getPos().first, playerAct->getPos().second);
         // debug
@@ -286,6 +314,11 @@ void MainWindow::updateGame()
          */
 
         // Disparar
+        // Implementación de la metralleta
+        if(pickUpPlayer == 'M'){
+            playerAct->setCooldownDisparo(false);
+        }
+
         if(pShooting[i] && !playerAct->getCooldownDisparo()){
             std::cout << "DISPARANDOOOOOOOOOO" << std::endl;
             float xPlayer = playerAct->getPos().first;
@@ -421,9 +454,71 @@ void MainWindow::propDisparoRecibido(propsLife *propAct, int damage)
     }
 }
 
-void MainWindow::recogioPickUp(player *playerAct, char pickUpId)
+void MainWindow::recogioPickUp(player *playerAct, char pickUpId, int player1or2)
 {
-    //TODO: meterle los poderes al player
+    if(pickUpId == 'A' || pickUpId == 'J' || pickUpId == 'I'){
+        playerAct->setPickUp(pickUpId);
+        if(player1or2 == 0){
+            pickUpTimers[0]->start(8000);
+        } else if(player1or2 == 1){
+            pickUpTimers[1]->start(8000);
+        }
+    } else if (pickUpId == 'V'){
+        playerAct->setHealth(500);
+    } else if(pickUpId == 'M'){
+        playerAct->setPickUp(pickUpId);
+        if(player1or2 == 0){
+            pickUpTimers[0]->start(2500);
+        } else if(player1or2 == 1){
+            pickUpTimers[1]->start(2500);
+        }
+    }
+
+}
+
+void MainWindow::pickUpEndedP1()
+{
+    jugadores[0]->setPickUp('N');
+    pickUpTimers[0]->stop();
+}
+
+void MainWindow::pickUpEndedP2()
+{
+    jugadores[1]->setPickUp('N');
+    pickUpTimers[1]->stop();
+}
+
+void MainWindow::spawnPickUp()
+{
+    pickUps* pickUpAdd;
+
+    pickUpAdd = new pickUps(30, 30, 0, 0, getRandomChar());
+    pickUpAdd->setPos(-100, -30);
+    mapPickUps.push_back(pickUpAdd);
+
+    for (pickUps*  pickUpAct: mapPickUps) {
+        scene->addItem(pickUpAct);
+    }
+
+}
+
+char MainWindow::getRandomChar()
+{
+    // Create a random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    // Define the set of characters
+    const char charSet[] = {'V', 'A', 'J', 'M', 'I'};
+
+    // Generate a random index within the range of the character set
+    std::uniform_int_distribution<> distrib(0, sizeof(charSet) - 1);
+    int randomIndex = distrib(gen);
+
+    std::cout << "RANDOMLY CHOSEN CHAR: " << charSet[randomIndex] << std::endl;
+
+    // Return the randomly chosen character
+    return charSet[randomIndex];
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *ev)
