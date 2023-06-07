@@ -74,15 +74,15 @@ MainWindow::MainWindow(QWidget *parent)
     props* propToAdd;
 
     propToAdd = new props(20, 1700, 0, 0); // pared izquierda
-    propToAdd->setPos(-800, -600);
+    propToAdd->setPos(-765, -600);
     propsMapa.push_back(propToAdd);
 
     propToAdd = new props(20, 1700, 0, 0); // pared derecha
-    propToAdd->setPos(780, -600);
+    propToAdd->setPos(750, -600);
     propsMapa.push_back(propToAdd);
 
     propToAdd = new props(650, 40, 0, 0); // piso izq
-    propToAdd->setPos(-780, 415);
+    propToAdd->setPos(-765, 415);
     propsMapa.push_back(propToAdd);
 
     propToAdd = new props(100, 40, 0, 0); // piso centro
@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
     propsMapa.push_back(propToAdd);
 
     propToAdd = new props(2000, 20, 0, 0); // techo
-    propToAdd->setPos(-780, -564);
+    propToAdd->setPos(-780, -505);
     propsMapa.push_back(propToAdd);
 
 
@@ -219,6 +219,26 @@ void MainWindow::updateGame()
      * Recuerde que el eje y aumenta hacia abajo (disminuye hacia arriba).
      */
 
+
+    scene->removeItem(textItem);
+    textItem->setPos(-500, -500);
+    QString valStr = QString::number(jugadores[0]->getHealth());
+    textItem->setPlainText("Jugador 1: " + valStr);
+    textItem->setDefaultTextColor(Qt::red);
+    textItem->setFont(QFont("Comic Sans MS", 18));
+    scene->addItem(textItem);
+
+    scene->removeItem(textItem1);
+    textItem1->setPos(500, -500);
+    QString valStr1 = QString::number(jugadores[1]->getHealth());
+    textItem1->setPlainText("Jugador 2: " + valStr1);
+    textItem1->setDefaultTextColor(Qt::red);
+    textItem1->setFont(QFont("Comic Sans MS", 18));
+    scene->addItem(textItem1);
+
+
+
+
     for(int i = 0; i < 2; i++){
         player* playerAct = jugadores[i];
         char pickUpPlayer = playerAct->getPickUp();
@@ -279,7 +299,7 @@ void MainWindow::updateGame()
         // Determinar si el jugador está parado sobre una plataforma
         if(!playerAct->getOnfall()){
             bool playerEnElAire = true;
-            verticalLines[i]->setPos(playerAct->getPos().first, (playerAct->getPos().second + 50 + 3));
+            verticalLines[i]->setPos(playerAct->getPos().first, (playerAct->getPos().second + 25 + 3));
             for(int iRect = 0; iRect < propsMapa.size(); iRect++){
                 if( verticalLines[i]->collidesWithItem(propsMapa[iRect]) ){
                     playerEnElAire = false;
@@ -436,8 +456,8 @@ void MainWindow::collisionDetected(player*  player, props*  rectItem)
     char collisionType = 'N'; // Valores posibles: N: no específicado, Y: en Y, X: en X
 
     // Dimensiones del jugador
-    float playerHeight = 100;
-    float playerWidth = 40;
+    float playerHeight = 50;
+    float playerWidth = 20;
 
     std::cout << "Collision detected!" << std::endl;
     std::cout << rectItem->pos().x() << ", " << rectItem->pos().y() << " ...rectanglepos" << std::endl;

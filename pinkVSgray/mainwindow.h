@@ -19,6 +19,8 @@
 #include "propsLife.h"
 #include "pickUps.h"
 
+#include <QGraphicsTextItem>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -122,6 +124,9 @@ private:
 
     // elegir pickup aleatoriamente
     char getRandomChar();
+
+    QGraphicsTextItem *textItem = new QGraphicsTextItem();
+    QGraphicsTextItem *textItem1 = new QGraphicsTextItem();
 
 
 };

@@ -41,7 +41,7 @@ void player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     // Para crear un círculo azul
     //painter->setBrush(Qt::darkBlue);
     painter->drawPixmap(-width/2, -high/2,*pixmapPlayer,columns,rows,width,high);
-    setScale(0.9);
+    setScale(1);
     //painter->drawRect(hitbox);
 }
 

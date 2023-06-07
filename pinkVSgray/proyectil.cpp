@@ -9,7 +9,7 @@ proyectil::proyectil(float xi, float yi, bool direccion, char arma) : player(xi,
 
     // El tamaño del proyectil está determinado por el tipo de arma
     if(this->arma == 'D'){
-        this->radio = 3;
+        this->radio = 5;
         this->damage = 100;
     }
 }
