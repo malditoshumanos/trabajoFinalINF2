@@ -216,6 +216,12 @@ void MainWindow::updateGame()
                     break;
                 }
             }
+            for(int iRect = 0; iRect < propsMapaDestructibles.size(); iRect++){
+                if( verticalLines[i]->collidesWithItem(propsMapaDestructibles[iRect]) ){
+                    playerEnElAire = false;
+                    break;
+                }
+            }
             playerAct->setOnfall(playerEnElAire);
         }
 
