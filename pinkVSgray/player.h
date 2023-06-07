@@ -39,7 +39,11 @@ public:
     void setPosY(float);
 
     char getCurrentWeapon();
-    char getHealth();
+    int getHealth();
+    void setHealth(int);
+
+    void setCooldownDisparo(bool);
+    bool getCooldownDisparo();
 
 
 private:
@@ -48,9 +52,12 @@ private:
     const float masa = 5; // masa del jugador
     const float dt = 0.5; // cambio de tiempo en cada actualización
     // Este es el tamaño del jugador. Se usa en boundingRect() y paint() (ver player.cpp)
+    // Hay varias partes del código que deben ser modificadas si cambia estos valores :(
     QRectF hitbox = QRectF(-10,-25,20,50);
 
     int vida; // La vida del jugador está entre 0 y 500
+
+    bool cooldownDisparo;
 
 protected:
     /* Protected significa que las clases derivadas de player (proyectil) van a poder

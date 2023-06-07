@@ -24,12 +24,15 @@ public:
      */
     std::pair<float, float> actualizarMov();
 
+    int getDamage();
+    void makeDamageZero();
+
 private:
     bool dir; // Este bool es true si el proyectil va hacia la derecha y false si va hacia la izquierda
     float radio; // Radio del proyectil. En general se modelan como círculos.
     // dir y radio se definen en el constructor
 
-    bool damage; // Daño que causa el proyectil
+    int damage; // Daño que causa el proyectil
 
     // Overload member variables
     const float masa = 2; // masa del proyectil

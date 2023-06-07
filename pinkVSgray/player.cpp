@@ -11,6 +11,7 @@ player::player(float xInicial, float yInicial)
     this->onFall = false;    
     this->arma = 'D'; // El arma inicial es la Desert Eagle
     this->vida = 500; // El jugador inicia con vida máxima
+    this->cooldownDisparo = false; // El cooldown está desactivado al spawnear al jugador
 }
 
 QRectF player::boundingRect() const
@@ -104,7 +105,22 @@ char player::getCurrentWeapon()
     return arma;
 }
 
-char player::getHealth()
+int player::getHealth()
 {
     return vida;
+}
+
+void player::setHealth(int newVida)
+{
+    this->vida = newVida;
+}
+
+void player::setCooldownDisparo(bool newCooldown)
+{
+    this->cooldownDisparo = newCooldown;
+}
+
+bool player::getCooldownDisparo()
+{
+    return this->cooldownDisparo;
 }

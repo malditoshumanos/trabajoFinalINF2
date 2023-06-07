@@ -1,5 +1,7 @@
 #include "proyectil.h"
 
+#include <iostream>
+
 proyectil::proyectil(float xi, float yi, bool direccion, char arma) : player(xi, yi)
 {
     this->dir = direccion;
@@ -8,6 +10,7 @@ proyectil::proyectil(float xi, float yi, bool direccion, char arma) : player(xi,
     // El tamaño del proyectil está determinado por el tipo de arma
     if(this->arma == 'D'){
         this->radio = 3;
+        this->damage = 100;
     }
 }
 
@@ -28,7 +31,7 @@ std::pair<float, float> proyectil::actualizarMov()
 {
     switch (arma){
         case 'D':{
-            float velProyectil = 20; // Velocidad horizontal del proyectil
+            float velProyectil = 7; // Velocidad horizontal del proyectil
 
             // El proyectil de la DE se mueve con velocidad constante horizontalmente.
             this->acc.first = 0;
@@ -41,4 +44,14 @@ std::pair<float, float> proyectil::actualizarMov()
         }
 
     }
+}
+
+int proyectil::getDamage()
+{
+    return this->damage;
+}
+
+void proyectil::makeDamageZero()
+{
+    this->damage = 0;
 }

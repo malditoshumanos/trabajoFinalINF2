@@ -6,10 +6,17 @@
 #include <QTimer> // Para actualizar el estado del juego cada cierto tiempo
 #include <QKeyEvent> // Para manejar los eventos relacionados con presionar y soltar teclas
 #include <QPointF>
+#include <QGraphicsLineItem>
+
 #include <vector>
+#include <memory>
+
 
 #include "player.h"
 #include "proyectil.h"
+#include "props.h"
+#include "propsLife.h"
+#include "pickUps.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -25,42 +32,75 @@ public:
     ~MainWindow();
 
 public slots:
-    void updateGame();
-    void collisionDetected(player* & player, QGraphicsRectItem* & rectItem);
+    void updateGame();    
+
+    // Colisión entre jugador y elementos del mapa
+    void collisionDetected(player*  player, props*  rectItem);
+
+    // Método para implementar el cooldown timer de las armas
+    void cooldownEndedP1();
+    void cooldownEndedP2();
+
+    // Método para modelar el sistema de vida del jugador
+    void disparoRecibido(player* playerAct, int damage);
+
+    // Método para modelar el daño hecho a los props destructibles
+    void propDisparoRecibido(propsLife *propAct, int damage);
+
+    // Método para modelar recoger pickups
+    void recogioPickUp(player* playerAct, char pickUpId);
 
 signals:
-    void collision(player* & player, QGraphicsRectItem* & rectItem);
+    // Colisión entre jugador y elementos del mapa
+    void collision(player*  player, props*  rectItem);
+
+    // Método para modelar el sistema de vida del jugador
+    void colisionProyectil(player* playerAct, int damage);
+
+    // Método para modelar el daño hecho a los props destructibles
+    void colisionDisparoProp(propsLife* propAct, int damage);
+
+    // Método para modelar recoger pickups
+    void colisionPickUp(player* playerAct, char pickUpId);
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene* scene;
 
     // Jugadores
-    player* player1;
-    player* player2;
+    player* playerAdd;
     std::vector<player*> jugadores;
 
     QTimer *timer; // Timer para actualizar el juego
+    QTimer *addCooldownTimer;
+    std::vector<QTimer*> cooldownTimers;
 
 
     // Eventos(metodos) de presionar y soltar teclas
     void keyPressEvent(QKeyEvent *ev);
     void keyReleaseEvent(QKeyEvent *ev);
-    bool p1MovIz = false; // Player 1 moviéndose a la izquierda, la derecha, saltando o agachándose
-    bool p1MovDer = false;
-    bool p1jump = false;
-    bool p1crouch = false;
-    bool p1shooting = false;
-    bool dirDisparo;
+    std::vector<bool> pMovIz = {false, false};
+    std::vector<bool> pMovDer = {false, false};
+    std::vector<bool> pJump = {false, false};
+    std::vector<bool> pCrouch = {false, false};
+    std::vector<bool> pShooting = {false, false};
+    std::vector<bool> pDirDisparo = {false, false};
     // Consodere inicializar estas variables en el constructor
+
+    // Lineas para chequear si el jugador está en el aire
+    std::vector<QGraphicsLineItem*> verticalLines;
+    QGraphicsLineItem* line;
 
 
     // En este vector se guardan los elementos que conforman el mapa
-    std::vector<QGraphicsRectItem*> rectangulosMapa;
-    QGraphicsRectItem* rectangle;
+    std::vector<props*> propsMapa;
+    std::vector<propsLife*> propsMapaDestructibles;
 
     // En este vector se guardan los proyectiles que hay en pantalla
-    std::vector<proyectil*> proyectilesEnPantalla;
+    std::vector<std::unique_ptr<proyectil>> proyectilVector;
+
+    // En este vector se guardan los pickUps en el mapa
+    std::vector<pickUps*> mapPickUps;
 
 
 };

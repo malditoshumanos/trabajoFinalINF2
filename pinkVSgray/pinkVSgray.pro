@@ -11,12 +11,18 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    pickUps.cpp \
     player.cpp \
+    props.cpp \
+    propsLife.cpp \
     proyectil.cpp
 
 HEADERS += \
     mainwindow.h \
+    pickUps.h \
     player.h \
+    props.h \
+    propsLife.h \
     proyectil.h
 
 FORMS += \
