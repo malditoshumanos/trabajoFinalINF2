@@ -9,6 +9,8 @@ player::player(float xInicial, float yInicial)
     this->pos.second = yInicial;
     this->setPos(pos.first, pos.second);
     this->onFall = false;    
+    this->arma = 'D'; // El arma inicial es la Desert Eagle
+    this->vida = 500; // El jugador inicia con vida máxima
 }
 
 QRectF player::boundingRect() const
@@ -95,4 +97,14 @@ void player::setPosX(float newPosX)
 void player::setPosY(float newPosY)
 {
     this->pos.second = newPosY;
+}
+
+char player::getCurrentWeapon()
+{
+    return arma;
+}
+
+char player::getHealth()
+{
+    return vida;
 }

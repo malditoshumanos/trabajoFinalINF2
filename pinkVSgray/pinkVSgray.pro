@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    player.cpp
+    player.cpp \
+    proyectil.cpp
 
 HEADERS += \
     mainwindow.h \
-    player.h
+    player.h \
+    proyectil.h
 
 FORMS += \
     mainwindow.ui

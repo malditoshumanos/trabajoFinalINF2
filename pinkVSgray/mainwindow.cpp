@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //CREAR JUGADORES
     player1 = new player(0, -26);
+
     scene->addItem(player1);
 
     //CREAR MAPA
@@ -75,7 +76,7 @@ void MainWindow::updateGame()
 
 
     /*
-     * PARÁMETROS QUE DESCRIBEN EL MOVIMIENTO
+     * PARÁMETROS QUE DESCRIBEN EL MOVIMIENTO DEL JUGADOR
      */
     float fuerzaHorizontal = 4; // Magnitud de fuerza que exprimenta el jugador al moverse en x
     float friccionHorizontal = 7.5; // Magnitud de la fricción del piso
@@ -132,7 +133,7 @@ void MainWindow::updateGame()
 
 
     /*
-     * DETECTAR COLISIONES
+     * DETECTAR COLISIONES ENTRE JUGADOR Y ELEMENTOS DEL MAPA
      */
     foreach(QGraphicsRectItem* rect, rectangulosMapa) {
         if(player1->collidesWithItem(rect)) emit collision(player1, rect);
@@ -148,6 +149,28 @@ void MainWindow::updateGame()
     // debug
     std::cout << "pos: " <<  player1->getPos().first <<", " <<  player1->getPos().second;
     std::cout << " // vel: " <<  player1->getVel().first <<", " <<  player1->getVel().second << std::endl;
+
+
+
+    /* DISPAROS
+     */
+
+    // Disparar
+    if(p1shooting){
+        std::cout << "DISPARANDOOOOOOOOOO" << std::endl;
+        float xPlayer = player1->getPos().first;
+        float yPlayer = player1->getPos().second;
+        float playerWidth = 20;
+        proyectil* proy = new proyectil( (xPlayer + (playerWidth/2)), yPlayer, dirDisparo, player1->getCurrentWeapon());
+        proyectilesEnPantalla.push_back(proy);
+        scene->addItem(proyectilesEnPantalla.back());
+    }
+
+    // Actualizar posición de los disparos
+    foreach (proyectil* proyActual, proyectilesEnPantalla){
+        proyActual->actualizarMov();
+        proyActual->setPos(proyActual->getPos().first, proyActual->getPos().second);
+    }
 }
 
 
@@ -248,10 +271,12 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
     if(ev->key()==Qt::Key_A) // Si la tecla presionada es la A
     {
         p1MovIz = true;
+        dirDisparo = false;
     }
     else if(ev->key()==Qt::Key_D)
     {
         p1MovDer= true;
+        dirDisparo = true;
     }
     else if(ev->key()==Qt::Key_W)
     {
@@ -260,6 +285,10 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
     else if(ev->key()==Qt::Key_S)
     {
         p1crouch = true;
+    }
+
+    if(ev->key()==Qt::Key_X){
+        p1shooting = true;
     }
 }
 void MainWindow::keyReleaseEvent(QKeyEvent *ev){
@@ -279,5 +308,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *ev){
     else if(ev->key()==Qt::Key_S)
     {
         p1crouch = false;
+    }
+
+    if(ev->key()==Qt::Key_X){
+        p1shooting = false;
     }
 }
